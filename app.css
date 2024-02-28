@@ -8,6 +8,7 @@ html {
 
 body {
   margin: 0;
+  padding: 0 150px;
 }
 
 label,
@@ -111,6 +112,10 @@ button:active {
   margin: 0;
 }
 
+.project.finished_projects {
+  background-color: #575757;
+}
+
 .droppable {
   background: #ffe3ee;
 }
@@ -124,4 +129,21 @@ button:active {
   padding: 1rem;
   border: 1px solid #ff0062;
   background: #f7f7f7;
+}
+
+#form-project {
+  border: 1px solid #ff0062;
+  padding: 10px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #e9e9e9;
+}
+
+.form-input {
+  width: 100%;
+}
+
+.form-control {
+  width: 50%;
 }
