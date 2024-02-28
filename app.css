@@ -57,7 +57,7 @@ button:active {
 }
 
 .projects {
-  margin: 1rem;
+  margin: 1rem 0;
   border: 1px solid #ff0062;
 }
 
@@ -142,6 +142,7 @@ button:active {
 
 .form-input {
   width: 100%;
+  max-width: 100%;
 }
 
 .form-control {
