@@ -22,16 +22,18 @@ class Projects implements ProjectsList {
 
     constructor() {}
 
-    addProject(project: ProjectForm) {
+    get getProjects() {
+        return this.projects;
+    }
+
+    addProject(project: Project) {
         this.projects.push(project);
         this.addProjectOnPage(project);
 
         this.lastId = this.projects.length;
-        
-        project.clearForm();
     }
     
-    addProjectOnPage({ id, title, people, description, status}: Project) {
+    private addProjectOnPage({ id, title, people, description, status}: Project) {
         const projectsListElement = document.querySelector(`#${status}-projects-list`)! as HTMLElement;
 
         projectsListElement.innerHTML += `
@@ -48,42 +50,40 @@ class Projects implements ProjectsList {
 
         project.status = newStatus;
     }
-
-    get getProjects() {
-        return this.projects;
-    }
 }
 
-class ProjectForm implements Project{
-    title: string;
-    people: number;
-    description: string;
-    status: 'active' | 'finished';
+class ProjectForm {
+    titleInput: HTMLInputElement;
+    descriptionInput: HTMLInputElement;
+    peopleInput: HTMLInputElement
 
     constructor(public id: number) {
-        const project = this.getDataFromInputs(id);
+        this.titleInput = document.querySelector('#title')! as HTMLInputElement;
+        this.descriptionInput = document.querySelector('#description')! as HTMLInputElement;
+        this.peopleInput = document.querySelector('#people')! as HTMLInputElement;
+
+        const project = this.mountProjectData(id);
 
         this.validateForm(project);
-
-        this.title = project.title;
-        this.people = project.people;
-        this.description = project.description;
-        this.status = project.status;
     }
 
-    getDataFromInputs(id: number): Project {
-        const { title, description, people } = this.getInputs();
+    get getProject() {
+        return this.mountProjectData(this.id);
+    }
+
+    private mountProjectData(id: number): Project {
+        const { titleInput, descriptionInput, peopleInput } = this;
 
         return {
             id,
-            title: title.value,
-            people: +people.value,
-            description: description.value,
+            title: titleInput.value,
+            people: +peopleInput.value,
+            description: descriptionInput.value,
             status: 'active'
         };
     }
 
-    validateForm({ title, description, people }: Project) {
+    private validateForm({ title, description, people }: Project) {
         let errorMessage: string | undefined;
     
         if (!title) {
@@ -102,20 +102,12 @@ class ProjectForm implements Project{
         throw new Error(errorMessage);
     }
 
-    getInputs(): ProjectInputs {
-        return {
-            title: document.querySelector('#title')! as HTMLInputElement,
-            description: document.querySelector('#description')! as HTMLInputElement,
-            people: document.querySelector('#people')! as HTMLInputElement
-        }
-    }
-
     clearForm() {
-        const { title, description, people } = this.getInputs();
+        const { titleInput, descriptionInput, peopleInput } = this;
 
-        title.value = '';
-        description.value = '';
-        people.value = '';
+        titleInput.value = '';
+        descriptionInput.value = '';
+        peopleInput.value = '';
     }
 }
 
@@ -127,8 +119,9 @@ class Main {
     
         const project = new ProjectForm(this.projects.lastId + 1);
     
-        this.projects.addProject(project);
-        console.log(this.projects.getProjects);
+        this.projects.addProject(project.getProject);
+
+        project.clearForm();
     }
 
     dragStart(event: DragEvent) {
@@ -140,6 +133,21 @@ class Main {
     }
 
     drop(event: DragEvent) {
+        event.preventDefault();
+
+        const hostElement = this.getHostElement(event);
+        const projectId = event.dataTransfer!.getData('Text');
+        const draggedElement = document.getElementById(projectId)!;
+        const projectNewStatus = hostElement.id === 'finished-projects-list' ? 'finished' : 'active';
+        
+        hostElement.appendChild(draggedElement);
+        
+        const projectIdSplitted = projectId.split('-')!;
+
+        this.projects.updateStatusById(+projectIdSplitted[1], projectNewStatus);
+    }
+
+    private getHostElement(event: DragEvent) {
         let target: HTMLElement = (event.target! as HTMLElement);
 
         if (target.localName !== 'ul') {
@@ -148,16 +156,7 @@ class Main {
             }
         }
 
-        event.preventDefault();
-        
-        const projectId = event.dataTransfer!.getData('Text');
-        const projectIdSplitted = projectId.split('-')!;
-        const projectNewStatus = target.id === 'finished-projects-list' ? 'finished' : 'active';
-        
-        target.appendChild(document.getElementById(projectId)!);
-
-        this.projects.updateStatusById(+projectIdSplitted[1], projectNewStatus);
-        console.log(this.projects.getProjects);
+        return target;
     }
 }
 
