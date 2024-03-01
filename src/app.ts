@@ -76,9 +76,9 @@ class ProjectForm {
 
         return {
             id,
-            title: titleInput.value,
-            people: +peopleInput.value,
-            description: descriptionInput.value,
+            title: titleInput.value.trim(),
+            people: +peopleInput.value.trim(),
+            description: descriptionInput.value.trim(),
             status: 'active'
         };
     }
