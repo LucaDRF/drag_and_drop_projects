@@ -26,23 +26,10 @@ class Projects implements ProjectsList {
         return this.projects;
     }
 
-    addProject(project: Project) {
+    pushProject(project: Project) {
         this.projects.push(project);
-        this.addProjectOnPage(project);
 
         this.lastId = this.projects.length;
-    }
-    
-    private addProjectOnPage({ id, title, people, description, status}: Project) {
-        const projectsListElement = document.querySelector(`#${status}-projects-list`)! as HTMLElement;
-
-        projectsListElement.innerHTML += `
-        <li id="project-${id}" ondragstart="main.dragStart(event)" draggable="true">
-            <h2>${title}</h2>
-            <h3>${people} persons assigned</h3>
-            <p>${description}</p>
-        </li>
-        `;
     }
     
     updateStatusById(id: number, newStatus: 'active' | 'finished') {
@@ -119,7 +106,8 @@ class Main {
     
         const project = new ProjectForm(this.projects.lastId + 1);
     
-        this.projects.addProject(project.getProject);
+        this.projects.pushProject(project.getProject);
+        this.addProjectOnSection(project.getProject);
 
         project.clearForm();
     }
@@ -145,6 +133,18 @@ class Main {
         const projectIdSplitted = projectId.split('-')!;
 
         this.projects.updateStatusById(+projectIdSplitted[1], projectNewStatus);
+    }
+
+    private addProjectOnSection({ id, title, people, description, status}: Project) {
+        const projectsListElement = document.querySelector(`#${status}-projects-list`)! as HTMLElement;
+
+        projectsListElement.innerHTML += `
+        <li id="project-${id}" ondragstart="main.dragStart(event)" draggable="true">
+            <h2>${title}</h2>
+            <h3>${people} persons assigned</h3>
+            <p>${description}</p>
+        </li>
+        `;
     }
 
     private getHostElement(event: DragEvent) {
