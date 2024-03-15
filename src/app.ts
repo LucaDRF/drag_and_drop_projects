@@ -1,4 +1,4 @@
-interface Project {
+interface ProjectInterface {
     id: number,
     title: string,
     people: number,
@@ -26,7 +26,7 @@ class Projects implements ProjectsList {
         return this.projects;
     }
 
-    pushProject(project: Project) {
+    pushProject(project: ProjectInterface) {
         this.projects.push(project);
 
         this.lastId = this.projects.length;
@@ -39,38 +39,55 @@ class Projects implements ProjectsList {
     }
 }
 
+class Project implements ProjectInterface {
+    constructor(
+        public id: number,
+        public title: string,
+        public people: number,
+        public description: string,
+        public status: 'active' | 'finished') {
+    }
+}
+
 class ProjectForm {
     titleInput: HTMLInputElement;
     descriptionInput: HTMLInputElement;
     peopleInput: HTMLInputElement
 
-    constructor(public id: number) {
+    constructor(private projects: Projects, private sections: Sections) {
         this.titleInput = document.querySelector('#title')! as HTMLInputElement;
         this.descriptionInput = document.querySelector('#description')! as HTMLInputElement;
         this.peopleInput = document.querySelector('#people')! as HTMLInputElement;
-
-        const project = this.mountProjectData(id);
-
-        this.validateForm(project);
     }
 
-    get getProject() {
-        return this.mountProjectData(this.id);
+    submitForm(event: InputEvent): void {
+        event.preventDefault()
+
+        const { id, title, people, description, status } = this.formData;
+
+        this.validateForm(title, people, description);
+    
+        const project = new Project(id, title, people, description, status);
+    
+        this.projects.pushProject(project);
+        this.sections.addProject(project);
+
+        this.clearForm();
     }
 
-    private mountProjectData(id: number): Project {
+    get formData(): ProjectInterface {
         const { titleInput, descriptionInput, peopleInput } = this;
 
         return {
-            id,
+            id: this.projects.lastId + 1,
             title: titleInput.value.trim(),
             people: +peopleInput.value.trim(),
             description: descriptionInput.value.trim(),
             status: 'active'
-        };
+        }
     }
 
-    private validateForm({ title, description, people }: Project) {
+    private validateForm(title: string, people: number, description: string) {
         let errorMessage: string | undefined;
     
         if (!title) {
@@ -98,18 +115,8 @@ class ProjectForm {
     }
 }
 
-class Main {
-   private projects = new Projects();
-
-    submitForm(event: InputEvent): void {
-        event.preventDefault()
-    
-        const project = new ProjectForm(this.projects.lastId + 1);
-    
-        this.projects.pushProject(project.getProject);
-        this.addProjectOnSection(project.getProject);
-
-        project.clearForm();
+class Sections {
+    constructor(private projects: Projects) {
     }
 
     dragStart(event: DragEvent) {
@@ -133,13 +140,15 @@ class Main {
         const projectIdSplitted = projectId.split('-')!;
 
         this.projects.updateStatusById(+projectIdSplitted[1], projectNewStatus);
+        console.log(this.projects);
+        
     }
 
-    private addProjectOnSection({ id, title, people, description, status}: Project) {
+    public addProject({ id, title, people, description, status}: Project) {
         const projectsListElement = document.querySelector(`#${status}-projects-list`)! as HTMLElement;
 
         projectsListElement.innerHTML += `
-        <li id="project-${id}" ondragstart="main.dragStart(event)" draggable="true">
+        <li id="project-${id}" ondragstart="sections.dragStart(event)" draggable="true">
             <h2>${title}</h2>
             <h3>${people} persons assigned</h3>
             <p>${description}</p>
@@ -160,4 +169,6 @@ class Main {
     }
 }
 
-const main = new Main();
+const projects = new Projects();
+const sections = new Sections(projects);
+const projectForm = new ProjectForm(projects, sections);

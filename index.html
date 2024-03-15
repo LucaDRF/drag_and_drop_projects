@@ -23,7 +23,7 @@
           <label for="people">People</label>
           <input type="number" class="form-input" id="people" step="1" min="0" max="10" />
         </div>
-        <button type="submit" onclick="main.submitForm(event)">ADD PROJECT</button>
+        <button type="submit" onclick="projectForm.submitForm(event)">ADD PROJECT</button>
       </form>
     </div>
     <div id="single-project">
@@ -31,7 +31,7 @@
         <header>
           <h2>ACTIVE PROJECTS</h2>
         </header>
-        <ul ondrop="main.drop(event)" ondragover="main.allowDrop(event)" id="active-projects-list"></ul>
+        <ul ondrop="sections.drop(event)" ondragover="sections.allowDrop(event)" id="active-projects-list"></ul>
       </section>
     </div>
     <div id="project-list">
@@ -39,7 +39,7 @@
         <header>
           <h2>FINISHED PROJECTS</h2>
         </header>
-        <ul ondrop="main.drop(event)" ondragover="main.allowDrop(event)" id="finished-projects-list"></ul>
+        <ul ondrop="sections.drop(event)" ondragover="sections.allowDrop(event)" id="finished-projects-list"></ul>
       </section>
     </div>
     <div id="app"></div>
