@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>ProjectManager</title>
     <link rel="stylesheet" href="app.css" />
-    <script src="dist/app.js" defer></script>
+    <script src="dist/app.js" type="module"></script>
   </head>
   <body >
     <div id="project-input">
@@ -23,7 +23,7 @@
           <label for="people">People</label>
           <input type="number" class="form-input" id="people" step="1" min="0" max="10" />
         </div>
-        <button type="submit" onclick="projectForm.submitForm(event)">ADD PROJECT</button>
+        <button type="button" onclick="submitForm(event)">ADD PROJECT</button> <!-- change to add event listener -->
       </form>
     </div>
     <div id="single-project">
@@ -31,7 +31,7 @@
         <header>
           <h2>ACTIVE PROJECTS</h2>
         </header>
-        <ul ondrop="sections.drop(event)" ondragover="sections.allowDrop(event)" id="active-projects-list"></ul>
+        <ul ondrop="sections.drop(event)" ondragover="sections.allowDrop(event)" id="active-projects-list"></ul> <!-- change to add event listener -->
       </section>
     </div>
     <div id="project-list">
@@ -39,7 +39,7 @@
         <header>
           <h2>FINISHED PROJECTS</h2>
         </header>
-        <ul ondrop="sections.drop(event)" ondragover="sections.allowDrop(event)" id="finished-projects-list"></ul>
+        <ul ondrop="sections.drop(event)" ondragover="sections.allowDrop(event)" id="finished-projects-list"></ul> <!-- change to add event listener -->
       </section>
     </div>
     <div id="app"></div>
