@@ -1,9 +1,9 @@
-import ProjectState from "../../states/project.js";
-import { Project } from "../../models/project.js";
 
-export default class Sections {
-    constructor(private projects: ProjectState) {
+export default abstract class DragAndDrop {
+    constructor() {
     }
+
+    abstract updateProject(id: number, newStatus: string): void;
 
     dragStart(event: DragEvent) {
         event.dataTransfer!.setData('Text', (event.target! as HTMLElement).id);
@@ -25,21 +25,7 @@ export default class Sections {
         
         const projectIdSplitted = projectId.split('-')!;
 
-        this.projects.updateStatusById(+projectIdSplitted[1], projectNewStatus);
-        console.log(this.projects);
-        
-    }
-
-    public addProject({ id, title, people, description, status}: Project) {
-        const projectsListElement = document.querySelector(`#${status}-projects-list`)! as HTMLElement;
-
-        projectsListElement.innerHTML += `
-        <li id="project-${id}" ondragstart="sections.dragStart(event)" draggable="true">
-            <h2>${title}</h2>
-            <h3>${people} persons assigned</h3>
-            <p>${description}</p>
-        </li>
-        `;
+        this.updateProject(+projectIdSplitted[1], projectNewStatus);
     }
 
     private getHostElement(event: DragEvent) {
@@ -53,4 +39,4 @@ export default class Sections {
 
         return target;
     }
-}
+ }

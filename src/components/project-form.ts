@@ -1,34 +1,22 @@
-import ProjectState from "../../states/project.js";
-import { Project, ProjectInterface } from "../../models/project.js";
-import Sections from "../sections/project.js";
+import ProjectState from "../states/project.js";
+import { Project, ProjectInterface } from "../models/project.js";
+import Sections from "./project-section.js";
 
 
 export default class ProjectForm {
     titleInput: HTMLInputElement;
     descriptionInput: HTMLInputElement;
-    peopleInput: HTMLInputElement
+    peopleInput: HTMLInputElement;
+    form: HTMLFormElement
 
     constructor(private projects: ProjectState, private sections: Sections) {
         this.titleInput = document.querySelector('#title')! as HTMLInputElement;
         this.descriptionInput = document.querySelector('#description')! as HTMLInputElement;
         this.peopleInput = document.querySelector('#people')! as HTMLInputElement;
-    }
+        this.form = document.getElementById('form-project')! as HTMLFormElement;
 
-    submitForm(event: InputEvent): void {
-        console.log('aa');
-        
-        event.preventDefault()
-
-        const { id, title, people, description, status } = this.formData;
-
-        this.validateForm(title, people, description);
-    
-        const project = new Project(id, title, people, description, status);
-    
-        this.projects.pushProject(project);
-        this.sections.addProject(project);
-
-        this.clearForm();
+        this.configure();
+        console.log(this);
     }
 
     get formData(): ProjectInterface {
@@ -41,6 +29,27 @@ export default class ProjectForm {
             description: descriptionInput.value.trim(),
             status: 'active'
         }
+    }
+
+    private configure() {
+        this.form.addEventListener('submit', this.submitForm.bind(this));
+        console.log(this);
+        
+    }
+
+    private submitForm(event: SubmitEvent): void {      
+        event.preventDefault()
+
+        const { id, title, people, description, status } = this.formData;
+
+        this.validateForm(title, people, description);
+    
+        const project = new Project(id, title, people, description, status);
+    
+        this.projects.pushProject(project);
+        this.sections.addProject(project);
+
+        this.clearForm();
     }
 
     private validateForm(title: string, people: number, description: string) {
