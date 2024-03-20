@@ -1,4 +1,4 @@
-import { ProjectsList, Project, ProjectInterface } from "../models/project.js";
+import { ProjectsList, Project, ProjectInterface } from "../models/project";
 
 export default class ProjectState implements ProjectsList {
     lastId: number = 0;

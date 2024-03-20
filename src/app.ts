@@ -1,6 +1,6 @@
-import ProjectState from "./states/project.js";
-import Sections from "./components/project-section.js";
-import ProjectForm from "./components/project-form.js";
+import ProjectState from "./states/project";
+import Sections from "./components/project-section";
+import ProjectForm from "./components/project-form";
 
 const projects = new ProjectState();
 const sections = new Sections(projects);

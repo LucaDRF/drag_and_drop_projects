@@ -1,19 +1,24 @@
 {
-  "name": "understanding-typescript",
+  "name": "drag-and-drop-typescript",
   "version": "1.0.0",
-  "description": "Understanding TypeScript Course Setup",
+  "description": "Drag and Drop with typescript",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc",
-    "build_watch": "tsc --watch",
-    "start": "lite-server"
+    "build": "webpack",
+    "build_prod": "webpack --config webpack.config-prod.js",
+    "start": "webpack-dev-server"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "clean-webpack-plugin": "^4.0.0",
     "lite-server": "^2.5.4",
     "nodemon": "^3.0.3",
-    "typescript": "^5.3.3"
+    "ts-loader": "^9.5.1",
+    "typescript": "^5.3.3",
+    "webpack": "^5.90.3",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^5.0.3"
   }
 }

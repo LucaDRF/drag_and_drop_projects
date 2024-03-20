@@ -1,6 +1,6 @@
-import ProjectState from "../states/project.js";
-import { Project, ProjectInterface } from "../models/project.js";
-import Sections from "./project-section.js";
+import ProjectState from "../states/project";
+import { Project, ProjectInterface } from "../models/project";
+import Sections from "./project-section";
 
 
 export default class ProjectForm {
@@ -16,7 +16,6 @@ export default class ProjectForm {
         this.form = document.getElementById('form-project')! as HTMLFormElement;
 
         this.configure();
-        console.log(this);
     }
 
     get formData(): ProjectInterface {
@@ -33,8 +32,6 @@ export default class ProjectForm {
 
     private configure() {
         this.form.addEventListener('submit', this.submitForm.bind(this));
-        console.log(this);
-        
     }
 
     private submitForm(event: SubmitEvent): void {      

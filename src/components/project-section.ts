@@ -1,6 +1,6 @@
-import ProjectState from "../states/project.js";
-import { Project } from "../models/project.js";
-import DragAndDrop from "../models/drag-and-drop.js";
+import ProjectState from "../states/project";
+import { Project } from "../models/project";
+import DragAndDrop from "../models/drag-and-drop";
 
 export default class Sections extends DragAndDrop {
     constructor(private projects: ProjectState) {
